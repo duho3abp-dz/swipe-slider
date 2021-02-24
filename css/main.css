@@ -28,6 +28,7 @@ button {
 .wrap {
     width: 1064px;
     margin: 0 auto;
+    padding: 50px 0;
 }
 
 /* ========================= media ========================= */
@@ -35,7 +36,7 @@ button {
 @media screen and (max-width: 1143px) {
     .wrap {
         width: 668px;
-    }   
+    }
 }
 
 @media screen and (max-width: 768px) {
