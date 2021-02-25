@@ -22,6 +22,7 @@ const swipeSlider = ({
 
     const wrapper = document.querySelector(sliderWrapElem); // нахолдим обертку
     const spinner = document.querySelector(spinnerElem); // нахолдим спинер
+    const window = wrapper.parentElement; // находим окно
 
     if (!wrapper || !slidesInfo.length || !spinner ) return console.log('Swipe slider dont worke, because not founed some props');
 
@@ -45,8 +46,8 @@ const swipeSlider = ({
         wrap.append(slide);
     };
 
-    const determineCoordinates = () => {
-        const coordinates = wrapper.getBoundingClientRect(); // находим координаты обертки
+    const determineCoordinates = (element) => {
+        const coordinates = element.getBoundingClientRect(); // находим координаты обертки
         return {
             xStart: coordinates.left, // расчет левой грани слайдера
             xEnd: coordinates.right, // расчет праой грани слайдера
@@ -57,9 +58,8 @@ const swipeSlider = ({
 
     // ================ INIT ================ \\
 
-    slidesInfo.map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
-
-    
+    [ ...slidesInfo, ...slidesInfo, ...slidesInfo ]
+    .map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
 
     wrapper.addEventListener('mousedown', (e) => {
         mousedown = true;
@@ -92,7 +92,7 @@ const swipeSlider = ({
     setTimeout(() => {
         spinner.classList.remove(activeClass); // убираем спиннер
         wrapper.classList.add(activeClass); // показываем слайдер
-        coordinates = determineCoordinates(); // находи координаты граней слайдера
+        coordinates = determineCoordinates(window); // находи координаты граней слайдера
     }, displayDelay);
 };
 
