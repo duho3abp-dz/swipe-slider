@@ -23,6 +23,8 @@
     position: relative;
     overflow: hidden;
     min-height: 200px;
+    display: flex;
+    justify-content: center;
 }
 
 .slider__loading {
@@ -42,7 +44,6 @@
     display: flex;
     visibility: hidden;
     opacity: 0;
-    overflow: hidden;
     position: absolute;
 }
 .slider__list.active {

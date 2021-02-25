@@ -18,34 +18,81 @@ const swipeSlider = ({
     displayDelay = 500, // задержка отображения окна со слайдами (ms)
     slidesInfo // данные слайдов
 } = {}) => {
-    const wrapper = document.querySelector(sliderWrapElem);
-    const spinner = document.querySelector(spinnerElem);
+    // ================ STATE ================ \\
+
+    const wrapper = document.querySelector(sliderWrapElem); // нахолдим обертку
+    const spinner = document.querySelector(spinnerElem); // нахолдим спинер
 
     if (!wrapper || !slidesInfo.length || !spinner ) return console.log('Swipe slider dont worke, because not founed some props');
+
+    let coordinates; // объявляем переменные для координат
+    let mousedown = false; // переменная для определения нажатой кнопки мыши
+    let start = 0 // стартовая точка (при клике)
+    let translateX = 0; // стартовое отклонение обертки
+    let deviation = 0; // фактическое отклоннение
+
+    // ================ LOGIC ================ \\
 
     const renderSlide = (wrap, className, src, alt) => {
         const slide = document.createElement('li');
         slide.classList.add(className);
         slide.innerHTML = `<img src=${src} alt=${alt}>`;
         slide.draggable = false;
+        slide.style.width = '130px'; // CANGE !!!!!!!!!!!!!!!!!!
 
         for (let i = 0; i < slide.children.length; i++) slide.children[i].draggable = false;
 
         wrap.append(slide);
     };
 
+    const determineCoordinates = () => {
+        const coordinates = wrapper.getBoundingClientRect(); // находим координаты обертки
+        return {
+            xStart: coordinates.left, // расчет левой грани слайдера
+            xEnd: coordinates.right, // расчет праой грани слайдера
+            yStart: coordinates.top, // расчет верхней грани слайдера
+            yEnd: coordinates.bottom, // расчет нижней грани слайдера
+        };
+    };
+
+    // ================ INIT ================ \\
+
     slidesInfo.map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
 
-    wrapper.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
+    
 
-        // console.dir(e);
+    wrapper.addEventListener('mousedown', (e) => {
+        mousedown = true;
+        start = e.pageX;
+    })
+
+    wrapper.addEventListener('mouseup', (e) => {
+        mousedown = false;
+        translateX = deviation;
+    })
+
+    document.body.addEventListener('mousemove', (e) => {
+        if (!mousedown) return;
+
+        const { xStart, xEnd, yStart, yEnd } = coordinates;
+        const x = e.clientX; // находим ось X
+        const y = e.clientY; // находим ось Y
+
+        if (x >= xEnd || x <= xStart || y >= yEnd || y <= yStart) {
+            translateX = deviation;
+            mousedown = false;
+            return;
+        }
+
+        deviation = translateX + (x - start);
+
+        wrapper.style.transform = `translateX(${deviation}px)`;
     });
 
     setTimeout(() => {
-        spinner.classList.remove(activeClass);
-        wrapper.classList.add(activeClass)
+        spinner.classList.remove(activeClass); // убираем спиннер
+        wrapper.classList.add(activeClass); // показываем слайдер
+        coordinates = determineCoordinates(); // находи координаты граней слайдера
     }, displayDelay);
 };
 
