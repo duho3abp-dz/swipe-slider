@@ -27,10 +27,21 @@ const swipeSlider = ({
         const slide = document.createElement('li');
         slide.classList.add(className);
         slide.innerHTML = `<img src=${src} alt=${alt}>`;
+        slide.draggable = false;
+
+        for (let i = 0; i < slide.children.length; i++) slide.children[i].draggable = false;
+
         wrap.append(slide);
     };
 
-    slidesInfo.forEach(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
+    slidesInfo.map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
+
+    wrapper.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        // console.dir(e);
+    });
 
     setTimeout(() => {
         spinner.classList.remove(activeClass);
