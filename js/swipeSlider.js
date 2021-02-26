@@ -22,9 +22,12 @@ const swipeSlider = ({
 
     const wrapper = document.querySelector(sliderWrapElem); // нахолдим обертку
     const spinner = document.querySelector(spinnerElem); // нахолдим спинер
-    const window = wrapper.parentElement; // находим окно
 
     if (!wrapper || !slidesInfo.length || !spinner ) return console.log('Swipe slider dont worke, because not founed some props');
+
+    const window = wrapper.parentElement; // находим окно
+    const correctSlidesInfo = checkQuantitySlides(slidesInfo); // изменяем четный массив на нечетный
+    const bigSlidesInfo = [ ...correctSlidesInfo, ...correctSlidesInfo, ...correctSlidesInfo ]; // утраиваем массив с информацией для слайдов
 
     let coordinates; // объявляем переменные для координат
     let mousedown = false; // переменная для определения нажатой кнопки мыши
@@ -33,6 +36,14 @@ const swipeSlider = ({
     let deviation = 0; // фактическое отклоннение
 
     // ================ LOGIC ================ \\
+
+    function checkQuantitySlides(arrow) {
+        let newObj = {};
+        return arrow.length % 2 ? arrow : arrow.reduce((res, obj, i) => {
+            if (i === (arrow.length / 2)) newObj = {...obj};
+            return i !== arrow.length - 1 ? [...res, {...obj}] : [...res, {...obj}, {...newObj}];
+        }, []);
+    }
 
     const renderSlide = (wrap, className, src, alt) => {
         const slide = document.createElement('li');
@@ -58,8 +69,7 @@ const swipeSlider = ({
 
     // ================ INIT ================ \\
 
-    [ ...slidesInfo, ...slidesInfo, ...slidesInfo ]
-    .map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
+    bigSlidesInfo.map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
 
     wrapper.addEventListener('mousedown', (e) => {
         mousedown = true;
