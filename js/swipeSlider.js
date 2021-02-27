@@ -41,7 +41,6 @@ const swipeSlider = ({
     let start = 0 // стартовая точка (при клике)
     let translateX = 0; // стартовое отклонение обертки
     let deviation = 0; // фактическое отклоннение
-    let scale = 1; // начальный scale коэфицент
 
     // ================ LOGIC ================ \\
 
@@ -121,9 +120,7 @@ const swipeSlider = ({
 
     // ================ INIT ================ \\
 
-    const slideElem = bigSlidesInfo.map(({ name, src }, i) => renderSlide(wrapper, slideClass, src, name, i));
-    
-
+    bigSlidesInfo.map(({ name, src }, i) => renderSlide(wrapper, slideClass, src, name, i));
     wrapper.addEventListener('mousedown', mouseDown);
     wrapper.addEventListener('mouseup', mouseUp);
     document.body.addEventListener('mousemove', mouseMove);
