@@ -7,6 +7,13 @@ const slidesInfo = [
     { name: 'Test4', src: './img/bottle-4.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1300 },
     { name: 'Test5', src: './img/bottle-5.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1400 },
     { name: 'Test6', src: './img/bottle-6.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1500 },
+    { name: 'Test7', src: './img/bottle-7.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1600 },
+    { name: 'Test1', src: './img/bottle-1.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1000 },
+    { name: 'Test2', src: './img/bottle-2.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1100 },
+    { name: 'Test3', src: './img/bottle-3.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1200 },
+    { name: 'Test4', src: './img/bottle-4.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1300 },
+    { name: 'Test5', src: './img/bottle-5.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1400 },
+    { name: 'Test6', src: './img/bottle-6.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1500 },
     { name: 'Test7', src: './img/bottle-7.svg', description: 'Lorem, consectetur adipisicing elit.', price: 1600 }
 ];
 
@@ -34,6 +41,7 @@ const swipeSlider = ({
     let start = 0 // стартовая точка (при клике)
     let translateX = 0; // стартовое отклонение обертки
     let deviation = 0; // фактическое отклоннение
+    let scale = 1; // начальный scale коэфицент
 
     // ================ LOGIC ================ \\
 
@@ -45,16 +53,32 @@ const swipeSlider = ({
         }, []);
     }
 
-    const renderSlide = (wrap, className, src, alt) => {
+    const changeFromNegativeNum = (num) => {
+        return num < 0 ? num * -1 : num;
+    }
+
+    const scaleCalc = (i) => {
+        const length = bigSlidesInfo.length; // длина массива
+        const half = (length - 1) / 2; // половина массива
+        const leftToCenter = changeFromNegativeNum((i) - half) * 2; // осталось до центра массива
+        const scale = (10 - leftToCenter) / 10; // scale значение
+        return scale && scale > 0 ? scale : 0.1;
+    };
+
+    const renderSlide = (wrap, className, src, alt, i) => {
         const slide = document.createElement('li');
         slide.classList.add(className);
         slide.innerHTML = `<img src=${src} alt=${alt}>`;
         slide.draggable = false;
         slide.style.width = '130px'; // CANGE !!!!!!!!!!!!!!!!!!
+        slide.style.transform = `scale(${scaleCalc(i)})`;
+
+        // if ((bigSlidesInfo.length - 1) / 2 === i) slide.classList.add(activeClass);
 
         for (let i = 0; i < slide.children.length; i++) slide.children[i].draggable = false;
 
         wrap.append(slide);
+        return slide;
     };
 
     const determineCoordinates = (element) => {
@@ -67,21 +91,17 @@ const swipeSlider = ({
         };
     };
 
-    // ================ INIT ================ \\
-
-    bigSlidesInfo.map(({ name, src }) => renderSlide(wrapper, slideClass, src, name));
-
-    wrapper.addEventListener('mousedown', (e) => {
+    const mouseDown = (e) => {
         mousedown = true;
         start = e.pageX;
-    })
+    };
 
-    wrapper.addEventListener('mouseup', (e) => {
+    const mouseUp = (e) => {
         mousedown = false;
         translateX = deviation;
-    })
+    };
 
-    document.body.addEventListener('mousemove', (e) => {
+    const mouseMove = (e) => {
         if (!mousedown) return;
 
         const { xStart, xEnd, yStart, yEnd } = coordinates;
@@ -97,7 +117,16 @@ const swipeSlider = ({
         deviation = translateX + (x - start);
 
         wrapper.style.transform = `translateX(${deviation}px)`;
-    });
+    };
+
+    // ================ INIT ================ \\
+
+    const slideElem = bigSlidesInfo.map(({ name, src }, i) => renderSlide(wrapper, slideClass, src, name, i));
+    
+
+    wrapper.addEventListener('mousedown', mouseDown);
+    wrapper.addEventListener('mouseup', mouseUp);
+    document.body.addEventListener('mousemove', mouseMove);
 
     setTimeout(() => {
         spinner.classList.remove(activeClass); // убираем спиннер
@@ -106,9 +135,7 @@ const swipeSlider = ({
     }, displayDelay);
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    swipeSlider({ slidesInfo });
-});
+document.addEventListener('DOMContentLoaded', () => swipeSlider({ slidesInfo }));
 
 
 {/* <div class="card__info">

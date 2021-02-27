@@ -59,19 +59,14 @@
     margin-right: 60px;
 }
 
-.slider__item.medium {
-    /* width: 84px; */
-    transform: scale(1.1);
+.slider__item:last-child {
+    margin-right: unset;
 }
 
 .slider__item.active {
     /* width: 212px; */
     /* margin: 0 81px 0 21px; */
-    transform: scale(1.2);
-}
-
-.slider__item:last-child {
-    margin-right: unset;
+    transform: scale(1);
 }
 
 .slider__actions {
