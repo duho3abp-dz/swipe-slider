@@ -36,6 +36,7 @@ const swipeSlider = ({
     const correctSlidesInfo = checkQuantitySlides(slidesInfo); // изменяем четный массив на нечетный
     const bigSlidesInfo = [ ...correctSlidesInfo, ...correctSlidesInfo, ...correctSlidesInfo ]; // утраиваем массив с информацией для слайдов
 
+    let slidesElems = null; // объявляем переменную для элементов
     let coordinates; // объявляем переменные для координат
     let mousedown = false; // переменная для определения нажатой кнопки мыши
     let start = 0 // стартовая точка (при клике)
@@ -55,6 +56,10 @@ const swipeSlider = ({
     const changeFromNegativeNum = (num) => {
         return num < 0 ? num * -1 : num;
     }
+
+    // const parseStringToNumber = (str) => {
+
+    // };
 
     const scaleCalc = (i) => {
         const length = bigSlidesInfo.length; // длина массива
@@ -116,11 +121,23 @@ const swipeSlider = ({
         deviation = translateX + (x - start);
 
         wrapper.style.transform = `translateX(${deviation}px)`;
+
+        slidesElems.forEach((elem) => {
+            const number = elem.style.transform.replace(/\D/igm, '');
+            const first = number.slice(0, 1);
+            const remainder = number.slice(1);
+            const scale = +`${first}.${remainder}`;
+            // const dev = 
+
+            elem.style.transform = `scale(${scale + 0.002})`
+            // console.log(scale);
+        });
     };
 
     // ================ INIT ================ \\
 
-    bigSlidesInfo.map(({ name, src }, i) => renderSlide(wrapper, slideClass, src, name, i));
+    slidesElems = bigSlidesInfo.map(({ name, src }, i) => renderSlide(wrapper, slideClass, src, name, i));
+
     wrapper.addEventListener('mousedown', mouseDown);
     wrapper.addEventListener('mouseup', mouseUp);
     document.body.addEventListener('mousemove', mouseMove);
