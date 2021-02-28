@@ -127,10 +127,8 @@ const swipeSlider = ({
             const first = number.slice(0, 1);
             const remainder = number.slice(1);
             const scale = +`${first}.${remainder}`;
-            // const dev = 
 
-            elem.style.transform = `scale(${scale + 0.002})`
-            // console.log(scale);
+            elem.style.transform = `scale(${scale + 0.002})`;
         });
     };
 
