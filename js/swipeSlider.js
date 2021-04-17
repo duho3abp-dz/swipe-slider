@@ -148,10 +148,3 @@ const swipeSlider = ({
 };
 
 document.addEventListener('DOMContentLoaded', () => swipeSlider({ slidesInfo }));
-
-
-{/* <div class="card__info">
-    <h5 class="card__name">Test1</h5>
-    <p class="card__description">Lorem, consectetur adipisicing elit.</p>
-    <div class="card__price">1000 ₽</div>
-</div> */}
