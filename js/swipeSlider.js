@@ -57,10 +57,6 @@ const swipeSlider = ({
         return num < 0 ? num * -1 : num;
     }
 
-    // const parseStringToNumber = (str) => {
-
-    // };
-
     const scaleCalc = (i) => {
         const length = bigSlidesInfo.length; // длина массива
         const half = (length - 1) / 2; // половина массива
